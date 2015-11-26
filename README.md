@@ -2,8 +2,8 @@
 The perfect warp plugin for your server!
 
 # Commands
-/setwarp <warpname>
+/setwarp warpname
 
-/updatewarp <warpname>
+/updatewarp warpname
 
-/warp <list|remove|warpname>
+/warp list|remove|warpname
