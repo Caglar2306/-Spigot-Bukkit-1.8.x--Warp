@@ -1,0 +1,13 @@
+# Generelle Informationen
+name: "Warp"
+main: com.caglardev.warp.Plugin
+version: 1.0
+
+# Befehle
+commands:
+    warp:
+      description: "Warp Befehl"
+    setwarp:
+      description: "Einen Warp setzen"
+    updatewarp:
+      description: "Einen Warp aktualisieren"
