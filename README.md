@@ -14,3 +14,8 @@ The perfect warp plugin for your server!
     Clean code
     Support chat colors
     Visitor numbers are saved
+    
+# Changelog v1.1
+The plugin now runs smoother and faster.
+
+Some configurable settings added.
