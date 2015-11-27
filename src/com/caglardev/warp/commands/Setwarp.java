@@ -1,6 +1,7 @@
 package com.caglardev.warp.commands;
 
-import org.bukkit.Location;
+import java.util.Map.Entry;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,28 +28,21 @@ public class Setwarp implements CommandExecutor {
 			if(player != null) {
 				if(args.length == 1) {
 					if(!args[0].equalsIgnoreCase("list") && !args[0].equalsIgnoreCase("remove")) {
-						if(!Plugin.configurationWarps.getConfig().contains("Warps." + args[0].toLowerCase())) {
-							Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Owner", player.getDisplayName());
-							//Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Visitor", 0);
-							
-							if(!Plugin.configurationWarps.getConfig().contains("Warps." + args[0].toLowerCase() + ".Visitor")) {
-								Plugin.configurationWarps.getConfig().createSection("Warps." + args[0].toLowerCase() + ".Visitor");
+						if(canPlayerSetWarp(player)) {
+							if(!Plugin.warps.containsKey(args[0].toLowerCase())) {
+								com.caglardev.warp.objects.Warp warp = new com.caglardev.warp.objects.Warp();
+								
+								warp.setName(args[0].toLowerCase());
+								warp.setOwner(player.getDisplayName());
+								warp.setLocation(player.getLocation());
+
+								Plugin.warps.put(args[0], warp);
+								player.sendMessage(getText("SETWARP_SUCCESSFULLY"));
+							} else {
+								player.sendMessage(getText("SETWARP_ALREADY_EXISTS"));
 							}
-							
-							Location location = player.getLocation();
-							Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Location.World", player.getWorld().getName());
-							Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Location.X", location.getX());
-							Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Location.Y", location.getY());
-							Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Location.Z", location.getZ());
-							Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Location.Yaw", location.getYaw());
-							Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Location.Pitch", location.getPitch());
-							
-							Plugin.configurationWarps.saveConfig();
-							Plugin.configurationWarps.reloadConfig();
-							
-							player.sendMessage(getText("SETWARP_SUCCESSFULLY"));
-						} else  {
-							player.sendMessage(getText("SETWARP_ALREADY_EXISTS"));
+						} else {
+							player.sendMessage(getText("SETWARP_YOU_CANT_CREATE_MORE"));
 						}
 					} else {
 						player.sendMessage(getText("SETWARP_NOT_ALLOWED_NAMES"));
@@ -59,6 +53,42 @@ public class Setwarp implements CommandExecutor {
 			}
 		}
 		return false;
+	}
+	
+	
+	public boolean canPlayerSetWarp(Player player) {
+		String permissionName = Plugin.configurationDefault.getConfig().getString("PermissionName", "com.caglardev.warp.permission");
+		
+		if(player.isOp()) {
+			int maxWarps = Plugin.configurationDefault.getConfig().getInt("MaxWarps.Op", -1);
+			if(maxWarps == -1 || maxWarps > getUserWarps(player.getDisplayName())) {
+				return true;
+			}
+		} else if(player.hasPermission(permissionName)) {
+			int maxWarps = Plugin.configurationDefault.getConfig().getInt("MaxWarps.Permission", -1);
+			if(maxWarps == -1 || maxWarps > getUserWarps(player.getDisplayName())) {
+				return true;
+			}
+		} else {
+			int maxWarps = Plugin.configurationDefault.getConfig().getInt("MaxWarps.Default", -1);
+			if(maxWarps == -1 || maxWarps > getUserWarps(player.getDisplayName())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public int getUserWarps(String playerName) {
+		int warps = 0;
+		
+		for(Entry<String, com.caglardev.warp.objects.Warp> entry : Plugin.warps.entrySet()) {
+			if(entry.getValue().getOwner().equalsIgnoreCase(playerName)) {
+				warps++;
+			}
+		}
+		
+		return warps;
 	}
 	
 	public String getText(String path) {

@@ -1,6 +1,5 @@
 package com.caglardev.warp.commands;
 
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,18 +25,9 @@ public class Updatewarp implements CommandExecutor {
 			
 			if(player != null) {
 				if(args.length == 1) {
-					if(Plugin.configurationWarps.getConfig().contains("Warps." + args[0].toLowerCase())) {
-						if(Plugin.configurationWarps.getConfig().getString("Warps." + args[0].toLowerCase() + ".Owner").equalsIgnoreCase(player.getDisplayName())) {
-							Location location = player.getLocation();
-							Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Location.World", player.getWorld().getName());
-							Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Location.X", location.getX());
-							Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Location.Y", location.getY());
-							Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Location.Z", location.getZ());
-							Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Location.Yaw", location.getYaw());
-							Plugin.configurationWarps.getConfig().set("Warps." + args[0].toLowerCase() + ".Location.Pitch", location.getPitch());
-							
-							Plugin.configurationWarps.saveConfig();
-							Plugin.configurationWarps.reloadConfig();
+					if(Plugin.warps.containsKey(args[0].toLowerCase())) {
+						if(Plugin.warps.get(args[0].toLowerCase()).getOwner().equalsIgnoreCase(player.getDisplayName())) {
+							Plugin.warps.get(args[0].toLowerCase()).setLocation(player.getLocation());
 							
 							player.sendMessage(getText("UPDATEWARP_SUCCESSFULLY"));
 						} else {

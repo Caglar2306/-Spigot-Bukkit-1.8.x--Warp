@@ -34,7 +34,7 @@ public class TextFormat {
         text = text.replaceAll("&5", ChatColor.DARK_PURPLE + "");
         text = text.replaceAll("&6", ChatColor.GOLD + "");
         text = text.replaceAll("&7", ChatColor.GRAY + "");
-        text = text.replaceAll("&8", ChatColor.DARK_GRAY+ "");
+        text = text.replaceAll("&8", ChatColor.DARK_GRAY + "");
         text = text.replaceAll("&9", ChatColor.BLUE + "");
         text = text.replaceAll("&a", ChatColor.GREEN + "");
         text = text.replaceAll("&b", ChatColor.AQUA + "");
