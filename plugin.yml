@@ -1,7 +1,7 @@
 # Generelle Informationen
 name: "Warp"
 main: com.caglardev.warp.Plugin
-version: 1.0
+version: 1.1
 
 # Befehle
 commands:
